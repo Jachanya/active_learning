@@ -3,6 +3,10 @@
 # bilingual_book_maker
 The bilingual_book_maker is an AI translation tool that uses ChatGPT to assist users in creating multi-language versions of epub files and books. This tool is exclusively designed for translating epub books that have entered the public domain and is not intended for copyrighted works. Prior to usage, please review the project's **[disclaimer](./disclaimer.md)**.
 
+# Origin
+
+This is an extension of the project from https://github.com/yihong0618/bilingual_book_maker.git
+
 ![image](https://user-images.githubusercontent.com/15976103/222317531-a05317c5-4eee-49de-95cd-04063d9539d9.png)
 
 
@@ -100,3 +104,4 @@ docker container run --rm --name bilingual_book_maker --mount type=bind,source=/
 Thank you, that's enough.
 
 ![image](https://user-images.githubusercontent.com/15976103/222407199-1ed8930c-13a8-402b-9993-aaac8ee84744.png)
+"# active_learning" 
