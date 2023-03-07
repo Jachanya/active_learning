@@ -5,7 +5,7 @@ Introducing our innovative project, designed to enhance the reading experience a
 
 # Origin
 
-![image](samples/Capture2.png)
+![image](samples/Capture2.PNG)
 
 
 ## Preparation
