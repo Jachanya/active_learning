@@ -168,13 +168,14 @@ class BEPUB:
         
         list_q_a = new_p.text.split('\n')
         list_q_a = list(filter(lambda x: len(x) > 0, list_q_a))
-        
-        new_p = f"""<details class="details-example">\
-                        <summary>{list_q_a[0]}</summary>\
-                        <ul>\
-                            <li>{list_q_a[1]}</li>\
-                        </ul>\
-                    </details>\n"""
+        new_p = ""
+        for i in range(len(list_q_a)//2):
+            new_p += f"""<details class="details-example">\
+                            <summary>{list_q_a[i*2]}</summary>\
+                            <ul>\
+                                <li>{list_q_a[(i*2)+1]}</li>\
+                            </ul>\
+                        </details>\n"""
         new_p = bs(new_p)
         return new_p
     

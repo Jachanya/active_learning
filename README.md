@@ -7,7 +7,7 @@ Introducing our innovative project, designed to enhance the reading experience a
 
 This is an extension of the project from https://github.com/yihong0618/bilingual_book_maker.git
 
-![image](https://user-images.githubusercontent.com/15976103/222317531-a05317c5-4eee-49de-95cd-04063d9539d9.png)
+![image](samples/image.png)
 
 
 ## Preparation
