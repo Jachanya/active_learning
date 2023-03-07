@@ -6,6 +6,9 @@ from pathlib import Path
 from copy import copy
 from bs4 import BeautifulSoup as bs
 from ebooklib import epub, ITEM_DOCUMENT
+from functools import partial
+import multiprocessing
+import threading
 
 IS_TEST = False
 
@@ -47,6 +50,29 @@ class BEPUB:
         new_p = bs(new_p)
         return new_p
     
+    def run_model(self, p, pbar, is_test_done, TEST_NUM, p_to_save_len, index):
+        
+        if is_test_done or not p.text or self._is_special_text(p.text):
+            return
+        new_p = copy(p)
+        # TODO banch of p to translate then combine
+        # PR welcome here
+        if self.resume and index < p_to_save_len:
+            new_p.string = self.p_to_save[index]
+        else:
+            new_p.string = self.translate_model.translate(p.text)
+            self.p_to_save.append(new_p.text)
+        
+        new_p = self._make_html_markup_qa(new_p)
+        p.insert_after(new_p)
+        index += 1
+        if index % 50 == 0:
+            self._save_progress()
+        # pbar.update(delta) not pbar.update(index)?
+        pbar.update(1)
+        if IS_TEST and index > TEST_NUM:
+            return
+
     def make_bilingual_book(self, options):
         IS_TEST = options.test
         TEST_NUM = options.test_num
@@ -67,28 +93,17 @@ class BEPUB:
                     soup = bs(item.content, "html.parser")
                     p_list = soup.findAll("p")
                     is_test_done = IS_TEST and index > TEST_NUM
-                    for p in p_list:
-                        if is_test_done or not p.text or self._is_special_text(p.text):
-                            continue
-                        new_p = copy(p)
-                        # TODO banch of p to translate then combine
-                        # PR welcome here
-                        if self.resume and index < p_to_save_len:
-                            new_p.string = self.p_to_save[index]
-                        else:
-                            new_p.string = self.translate_model.translate(p.text)
-                            self.p_to_save.append(new_p.text)
 
-                        new_p = self._make_html_markup_qa(new_p)
-                        p.insert_after(new_p)
-                        index += 1
-                        if index % 50 == 0:
-                            self._save_progress()
-                        # pbar.update(delta) not pbar.update(index)?
-                        pbar.update(1)
-                        if IS_TEST and index > TEST_NUM:
-                            break
+                    thread_list = []
+                    for p in p_list:
+                        thread_temp = threading.Thread(target=self.run_model, args=(p,pbar, is_test_done, TEST_NUM, p_to_save_len,index,))
+                        thread_temp.start()
+                        thread_list.append(thread_temp)
+
+                    for thread_pp in thread_list:
+                        thread_pp.join()
                     item.content = soup.prettify().encode()
+
                 new_book.add_item(item)
             name, _ = os.path.splitext(self.epub_name)
             epub.write_epub(f"{name}_bilingual.epub", new_book, {})
