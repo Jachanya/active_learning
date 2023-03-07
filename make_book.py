@@ -163,7 +163,21 @@ class BEPUB:
         new_book.spine = book.spine
         new_book.toc = book.toc
         return new_book
-
+    
+    def _make_html_markup_qa(self, new_p):
+        
+        list_q_a = new_p.text.split('\n')
+        list_q_a = list(filter(lambda x: len(x) > 0, list_q_a))
+        
+        new_p = f"""<details class="details-example">\
+                        <summary>{list_q_a[0]}</summary>\
+                        <ul>\
+                            <li>{list_q_a[1]}</li>\
+                        </ul>\
+                    </details>\n"""
+        new_p = bs(new_p)
+        return new_p
+    
     def make_bilingual_book(self):
         new_book = self._make_new_book(self.origin_book)
         all_items = list(self.origin_book.get_items())
@@ -193,15 +207,8 @@ class BEPUB:
                         else:
                             new_p.string = self.translate_model.translate(p.text)
                             self.p_to_save.append(new_p.text)
-                        
-                        list_q_a = new_p.text.split('\n')
-                        new_p = f"""<details class="details-example">\
-                                        <summary>{list_q_a[0]}</summary>\
-                                        <ul>\
-                                            <li>{list_q_a[1]}</li>\
-                                        </ul>\
-                                    </details>\n"""
-                        new_p = bs(new_p)
+
+                        new_p = self._make_html_markup_qa(new_p)
                         p.insert_after(new_p)
                         index += 1
                         if index % 50 == 0:
