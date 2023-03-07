@@ -1,4 +1,4 @@
-**[中文](./README-CN.md) | English**
+**English**
 
 # Active Learning
 Introducing our innovative project, designed to enhance the reading experience and promote active engagement with each paragraph. Our system generates a series of thought-provoking questions from each section of your chosen book, encouraging readers to delve deeper into the text and gain a more comprehensive understanding of the material. This project is suitable for avid readers looking to deepen their comprehension or for individuals who are seeking to cultivate a more active approach to reading. With our system, readers can improve their reading skills and knowledge acquisition while enjoying the books they love. This tool is exclusively designed for translating epub books that have entered the public domain and is not intended for copyrighted works. Prior to usage, please review the project's **[disclaimer](./disclaimer.md)**.
