@@ -65,7 +65,7 @@ class GPT3(Base):
     def translate(self, text):
         print(text)
         self.headers["Authorization"] = f"Bearer {self.get_key(self.api_key)}"
-        self.data["prompt"] = f"Please help me to translate，`{text}` to {self.language}"
+        self.data["prompt"] = f"Please help me to generate questions and answer，`{text}`"
         r = self.session.post(self.api_url, headers=self.headers, json=self.data)
         if not r.ok:
             return text
@@ -100,7 +100,7 @@ class ChatGPT(Base):
                     {
                         "role": "user",
                         # english prompt here to save tokens
-                        "content": f"Please help me to translate,`{text}` to {self.language}, please return only translated content not include the origin text",
+                        "content": f"Please help me to generate questions and answer,`{text}`, please return only questions and answer content not include the origin text",
                     }
                 ],
             )
@@ -126,7 +126,7 @@ class ChatGPT(Base):
                 messages=[
                     {
                         "role": "user",
-                        "content": f"Please help me to translate,`{text}` to {self.language}, please return only translated content not include the origin text",
+                        "content": f"Please help me to generate questions and answer,`{text}`, please return only questions and answer content not include the origin text",
                     }
                 ],
             )
@@ -193,6 +193,15 @@ class BEPUB:
                         else:
                             new_p.string = self.translate_model.translate(p.text)
                             self.p_to_save.append(new_p.text)
+                        
+                        list_q_a = new_p.text.split('\n')
+                        new_p = f"""<details class="details-example">\
+                                        <summary>{list_q_a[0]}</summary>\
+                                        <ul>\
+                                            <li>{list_q_a[1]}</li>\
+                                        </ul>\
+                                    </details>\n"""
+                        new_p = bs(new_p)
                         p.insert_after(new_p)
                         index += 1
                         if index % 50 == 0:
