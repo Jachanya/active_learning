@@ -65,13 +65,12 @@ class BEPUB:
         
         new_p = self._make_html_markup_qa(new_p)
         p.insert_after(new_p)
-        index += 1
+        
         if index % 50 == 0:
             self._save_progress()
         # pbar.update(delta) not pbar.update(index)?
         pbar.update(1)
-        if IS_TEST and index > TEST_NUM:
-            return
+        
 
     def make_bilingual_book(self, options):
         IS_TEST = options.test
@@ -96,9 +95,14 @@ class BEPUB:
 
                     thread_list = []
                     for p in p_list:
+                        
                         thread_temp = threading.Thread(target=self.run_model, args=(p,pbar, is_test_done, TEST_NUM, p_to_save_len,index,))
                         thread_temp.start()
+                        
                         thread_list.append(thread_temp)
+                        index += 1
+                        if IS_TEST and index > TEST_NUM:
+                            break
 
                     for thread_pp in thread_list:
                         thread_pp.join()
